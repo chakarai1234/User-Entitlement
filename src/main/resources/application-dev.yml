@@ -1,0 +1,26 @@
+server:
+  port: 8081
+  error:
+    include-message: ALWAYS
+
+spring:
+  datasource:
+    url: jdbc:h2:file:~/Documents/Codes/Java/Spring Boot/training/H2_Storage/users-entitlement
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: false
+  jpa:
+    open-in-view: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: 'create-drop'
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
