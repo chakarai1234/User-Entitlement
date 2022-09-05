@@ -1,26 +1,28 @@
 server:
+  ## Declare the port for the User entitlement microservices
   port: 8081
+  ## if got error send in the response of the controller as message
   error:
     include-message: ALWAYS
 
 spring:
+  ## Declare the H2 database as a file for local development
   datasource:
     url: jdbc:h2:file:~/Documents/Codes/Java/Spring Boot/training/H2_Storage/users-entitlement
     username: sa
     password: password
     driverClassName: org.h2.Driver
+  ## enable the h2 console
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: false
+  ## Enable the
   jpa:
     open-in-view: true
+    ## generate the Date definition language
     generate-ddl: true
+    ## Create and drop after the instance so that every start is fresh clean slate
     hibernate:
       ddl-auto: 'create-drop'
-
-management:
-  endpoint:
-    health:
-      show-details: ALWAYS
