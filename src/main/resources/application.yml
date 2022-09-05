@@ -1,15 +1,16 @@
 
 spring:
+  ## Declare the active and default profiles
   profiles:
     active: dev
     default: dev
-  output:
-    ansi:
-      enabled: ALWAYS
+  ## Declare the application name
   application:
     name: USERS-ENTITLEMENT
 
 eureka:
+  ## Enable the client for eureka to register and fetch the registry
   client:
+    fetch-registry: true
     enabled: true
     register-with-eureka: true

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+// Enabling the Eureka Client
 @EnableEurekaClient
 @SuppressWarnings("unused")
 public class UserEntitlementApplication {
@@ -18,12 +19,15 @@ public class UserEntitlementApplication {
         SpringApplication.run(UserEntitlementApplication.class, args);
     }
 
+    // Creating a bean so that can Autowire it later
+    // And Load Balanced for the gateway to access
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
+    // Creating a ObjectMapper bean so that later used to convert the response json from resttemplate to object
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper newObjMapper = new ObjectMapper();
