@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.chakarapani.base.Constants.Constants.GATEWAYURL;
+
 
 //Declaring that this is a RestController
 @RestController
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/api/entitlement")
 // Slf4j is a logger
 @Slf4j
+@CrossOrigin(origins = GATEWAYURL)
 public class userEntitlementController {
 
 	//Autowire the UsersEntitlement service here
@@ -31,7 +34,6 @@ public class userEntitlementController {
 	private UserEntitlementServiceImpl userEntitlementService;
 
 	// Declare the endpoint after /api/endpoints/**
-	@CrossOrigin(origins = "http://localhost:9090")
 	@PostMapping("/save")
 	@ApiResponses(value = {
 			@ApiResponse(description = "Success", useReturnTypeSchema = true, responseCode = "200",
@@ -50,7 +52,6 @@ public class userEntitlementController {
 	}
 
 
-	@CrossOrigin(origins = "http://localhost:9090")
 	@GetMapping("/entitlement")
 	@ApiResponses(value = {
 			@ApiResponse(description = "Success", useReturnTypeSchema = true, responseCode = "200",
