@@ -8,7 +8,7 @@ server:
 spring:
   ## Declare the H2 database as a file for local development
   datasource:
-    url: jdbc:h2:file:~/Documents/Codes/Java/Spring Boot/training/H2_Storage/users-entitlement
+    url: jdbc:h2:file:~/Documents/Codes/Java/Spring Boot/training/H2_Storage/users_entitlement
     username: sa
     password: password
     driverClassName: org.h2.Driver
@@ -25,4 +25,15 @@ spring:
     generate-ddl: true
     ## Create and drop after the instance so that every start is fresh clean slate
     hibernate:
-      ddl-auto: 'create-drop'
+      ddl-auto: update
+
+springdoc:
+  swagger-ui:
+    path: "/api/entitlement/swagger/swagger-ui.html"
+  api-docs:
+    path: "/api/entitlement/v3/api-docs"
+
+application.version: @project.version@
+
+header-missing-value: "Required Headers are missing (x-correleation-id & Country)"
+
