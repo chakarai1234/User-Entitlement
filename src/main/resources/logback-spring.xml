@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-<!--Configuration for the logger to log in json-->
+    <!--Configuration for the logger to log in json-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
             <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
-                <prettyPrint>false</prettyPrint>
+                <prettyPrint>true</prettyPrint>
             </jsonFormatter>
             <includeContextName>false</includeContextName>
             <includeMDC>false</includeMDC>
