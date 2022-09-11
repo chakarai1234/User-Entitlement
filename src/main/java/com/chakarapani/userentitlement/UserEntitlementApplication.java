@@ -25,7 +25,7 @@ public class UserEntitlementApplication {
 		SpringApplication.run(UserEntitlementApplication.class, args);
 	}
 
-	// Creating a bean so that can Autowire it later
+	// Creating a bean so that can Autowire it later@CrossOrigin(origins = "http://localhost:9090"
 	// And Load Balanced for the gateway to access
 	@Bean
 	@LoadBalanced
