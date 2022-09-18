@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Map;
+
+import static com.chakarapani.base.Constants.Constants.*;
 
 //@formatter:on
 @Service
 @Slf4j
 public class UserEntitlementServiceImpl implements UserEntitlementService {
-
-	@Value("${header-missing-value}")
-	String headerMissingValue;
 
 	//Autowired the UsersEntitlement repository
 	@Autowired
@@ -43,57 +40,81 @@ public class UserEntitlementServiceImpl implements UserEntitlementService {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public ResponseEntity<Object> saveEntitlementForUser(@NotNull Map<String, String> headers, @NotNull String username,
-	                                                     ArrayList<Roles> roles) {
-		String xCorrId = headers.get("x-correlation-id");
-		String country = headers.get("country");
+	public ResponseEntity<Object> saveEntitlementForUser(@NotNull Map<String, String> headers,
+	                                                     @NotNull String username, Roles roles) {
+		String xCorrId = headers.get(HEADERCORRELEATIONTITLE);
+		String country = headers.get(HEADERCOUNTRYTITLE);
 		if (username.equals("")) {
 			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.NOT_ACCEPTABLE,
 					"Please enter the username");
 		} else if (xCorrId == null || country == null) {
-			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST, headerMissingValue);
+			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
+					HEADERSMISSINGVALUE);
 		} else {
-			RequestEntity<Void> request =
-					RequestEntity.get(URI.create("http://USERS/api/users/user?username=" + username))
-							.header("x-correlation-id", xCorrId).header("country", country).build();
+			RequestEntity<Void> request = RequestEntity.get(
+							URI.create("http://ms-users/api/users/user?username=" + username))
+					.header(HEADERCORRELEATIONTITLE, xCorrId).header(HEADERCOUNTRYTITLE, country)
+					.build();
 
 			try {
-				String json =
-						new RequestToJsonStringConverter(objectMapper, restTemplate).generateStringResponseFromRequest(
-								request, "data");
+				String json = new RequestToJsonStringConverter(objectMapper,
+						restTemplate).generateStringResponseFromRequest(request, "data");
 				Users users1 = objectMapper.readValue(json, Users.class);
-				Entitlement entitlementFromRepository = userEntitlementRepository.findByUsername(users1.getUsername());
+				Entitlement entitlementFromRepository =
+						userEntitlementRepository.findByUsername(users1.getUsername());
 				if (entitlementFromRepository == null) {
 					Entitlement usersEntitlement1 = userEntitlementRepository.save(
-							Entitlement.builder().userId(users1.getId()).username(users1.getUsername()).roles(roles)
-									.build());
-					return Response.generateResponse(Message.SUCCESS, headers, HttpStatus.OK, usersEntitlement1);
+							Entitlement.builder().userId(users1.getId())
+									.username(users1.getUsername()).roles(roles).build());
+					return Response.generateResponse(Message.SUCCESS, headers, HttpStatus.OK,
+							usersEntitlement1);
 				} else {
-					return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
-							"User already has entitlement");
+					return Response.generateResponse(Message.FAILURE, headers,
+							HttpStatus.BAD_REQUEST, "User already has entitlement");
 				}
 
 			} catch (Exception e) {
 				log.error(e.getLocalizedMessage());
 				return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
-						"User doesn't exist in Users Microservice");
+						USERNOTEXISTS);
 			}
 
 		}
 	}
 
 	@Override
-	public ResponseEntity<Object> getEntitlementForUsername(@NotNull Map<String, String> headers, @NotNull String username) {
-		String xCorrId = headers.get("x-correlation-id");
-		String country = headers.get("country");
+	public ResponseEntity<Object> getEntitlementForUsername(@NotNull Map<String, String> headers,
+	                                                        @NotNull String username) {
+		String xCorrId = headers.get(HEADERCORRELEATIONTITLE);
+		String country = headers.get(HEADERCOUNTRYTITLE);
 		if (username.equals("")) {
 			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.NOT_ACCEPTABLE,
 					"Please enter the username");
 		} else if (xCorrId == null || country == null) {
-			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST, headerMissingValue);
+			return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
+					HEADERSMISSINGVALUE);
 		} else {
-			Entitlement userEntitlement = userEntitlementRepository.findByUsername(username);
-			return Response.generateResponse(Message.SUCCESS,headers,HttpStatus.OK,userEntitlement);
+
+			RequestEntity<Void> request = RequestEntity.get(
+							URI.create("http://ms-users/api/users/user?username=" + username))
+					.header(HEADERCORRELEATIONTITLE, xCorrId).header(HEADERCOUNTRYTITLE, country)
+					.build();
+
+			try {
+				String json = new RequestToJsonStringConverter(objectMapper,
+						restTemplate).generateStringResponseFromRequest(request, "data");
+				Users users1 = objectMapper.readValue(json, Users.class);
+				assert users1 != null;
+				Entitlement userEntitlement = userEntitlementRepository.findByUsername(username);
+				return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
+						userEntitlement);
+
+			} catch (Exception e) {
+				log.error(e.getLocalizedMessage());
+				return Response.generateResponse(Message.FAILURE, headers, HttpStatus.BAD_REQUEST,
+						USERNOTEXISTS);
+			}
+
 		}
 	}
 }

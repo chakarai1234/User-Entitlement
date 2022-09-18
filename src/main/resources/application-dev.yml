@@ -1,17 +1,10 @@
-server:
-  ## Declare the port for the User entitlement microservices
-  port: 8081
-  ## if got error send in the response of the controller as message
-  error:
-    include-message: ALWAYS
-
 spring:
   ## Declare the H2 database as a file for local development
   datasource:
-    url: jdbc:h2:file:~/Documents/Codes/Java/Spring Boot/training/H2_Storage/users_entitlement
-    username: sa
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/microservices
+    username: chakarai1234
     password: password
-    driverClassName: org.h2.Driver
   ## enable the h2 console
   h2:
     console:
@@ -20,6 +13,9 @@ spring:
         web-allow-others: false
   ## Enable the
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
     ## generate the Date definition language
     generate-ddl: true
@@ -27,13 +23,15 @@ spring:
     hibernate:
       ddl-auto: update
 
-springdoc:
-  swagger-ui:
-    path: "/api/entitlement/swagger/swagger-ui.html"
-  api-docs:
-    path: "/api/entitlement/v3/api-docs"
 
-application.version: @project.version@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
 
-header-missing-value: "Required Headers are missing (x-correleation-id & Country)"
+
+
+
 
