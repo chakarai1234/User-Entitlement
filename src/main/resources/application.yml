@@ -1,3 +1,9 @@
+server:
+  ## Declare the port for the User entitlement microservices
+  port: 8081
+  ## if got error send in the response of the controller as message
+  error:
+    include-message: ALWAYS
 
 spring:
   ## Declare the active and default profiles
@@ -6,7 +12,10 @@ spring:
     default: dev
   ## Declare the application name
   application:
-    name: USERS-ENTITLEMENT
+    name: ms-users-entitlement
+  output:
+    ansi:
+      enabled: ALWAYS
 
 eureka:
   ## Enable the client for eureka to register and fetch the registry
@@ -14,3 +23,11 @@ eureka:
     fetch-registry: true
     enabled: true
     register-with-eureka: true
+
+springdoc:
+  swagger-ui:
+    path: "/api/entitlement/swagger/swagger-ui.html"
+  api-docs:
+    path: "/api/entitlement/v3/api-docs"
+
+application.version: @project.version@
